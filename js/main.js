@@ -52,6 +52,20 @@ $(document).ready(function () {
     },
   ];
 
+  const todoOptions = [
+    {
+      text: "Modifica testo",
+      icon: ["my_icon", "fa-solid", "fa-pen-to-square"],
+      "data-attribute": "data-edit-todo-text",
+    },
+
+    {
+      text: "Cancella promemoria",
+      icon: ["my_icon", "fa-solid", "fa-trash"],
+      "data-attribute": "data-remove-from-todo-list",
+    },
+  ];
+
   todoList = $("[data-todo-list]");
   addToListBtn = $("[data-add-to-todo-list]");
   addToListInput = addToListBtn.siblings("input");
@@ -87,16 +101,28 @@ $(document).ready(function () {
       }
     });
 
+    $(document).on("click", "[data-change-dropdown-menu-status]", function () {
+      toggleElementVisibility($(this).next());
+    });
+
+    // $(document).on('click' , "[data-edit-todo-text" , function(){
+
+    // })
+
     $(document).on("click", "[data-remove-from-todo-list]", function () {
       deleteTodoElement($(this).parents("li"));
     });
 
-    $(document).on("click", "[data-todo-list] li .my_todo-text", function () {
-      changeTodoStatus(
-        $(this),
-        todoActions.length - 1 - $(this).parents("li").attr("key")
-      );
-    });
+    $(document).on(
+      "click",
+      "[data-todo-list] li .my_todo-info .my_todo-text",
+      function () {
+        changeTodoStatus(
+          $(this),
+          todoActions.length - 1 - $(this).parents("li").attr("key")
+        );
+      }
+    );
   }
 
   function createTodoElement() {
@@ -114,35 +140,62 @@ $(document).ready(function () {
   }
 
   function putTodoElementInHtml(todoText, todoStatus, index) {
-    liElement = getElementWithClasses(
-      "li",
+    todoElement = getElementWithClasses("li", [
       "d-flex",
       "justify-content-between",
       "p-2",
-      "rounded-1"
-    );
+      "rounded-1",
+    ]);
 
-    liElement.setAttribute("key", index);
+    todoElement.setAttribute("key", index);
 
-    todoInfo = getElementWithClasses("div", "my_todo-info");
+    todoInfo = getElementWithClasses("div", ["my_todo-info"]);
     todoInfoText = todoStatus
-      ? getElementWithClasses("span", "my_todo-text", "pe-3", "my_line-through")
-      : getElementWithClasses("span", "my_todo-text", "pe-3");
+      ? getElementWithClasses("span", [
+          "my_todo-text",
+          "pe-3",
+          "my_line-through",
+        ])
+      : getElementWithClasses("span", ["my_todo-text", "pe-3"]);
     todoInfoText.innerHTML = todoText;
-    trashIcon = getElementWithClasses(
-      "i",
+    dropdownMenu = getElementWithClasses("div", [
+      "my_dropdown-menu",
+      "text-end",
+      "position-relative",
+    ]);
+    dropdownMenuIcon = getElementWithClasses("i", [
       "my_icon",
       "fa-solid",
-      "fa-trash",
-      "align-self-center"
-    );
+      "fa-ellipsis",
+      "w-100",
+      "text-end",
+    ]);
+    dropdownMenuIcon.setAttribute("data-change-dropdown-menu-status", "");
+    hiddenMenu = getElementWithClasses("ul", [
+      "my_hidden-menu",
+      "my_d-none",
+      "px-0",
+      "position-absolute",
+      "end-0",
+    ]);
 
-    trashIcon.setAttribute("data-remove-from-todo-list", "");
+    todoOptions.forEach((todoOption) => {
+      dropdownElement = getElementWithClasses("li", ["p-2"]);
+      dropdownElement.setAttribute(todoOption["data-attribute"], "");
+      dropdownElementIcon = getElementWithClasses("i", todoOption.icon);
+      dropdownElementText = getElementWithClasses("span");
+      dropdownElementText.innerHTML = todoOption.text;
+      dropdownElement.append(dropdownElementIcon);
+      dropdownElement.append(dropdownElementText);
+      hiddenMenu.append(dropdownElement);
+    });
 
+    dropdownMenu.append(dropdownMenuIcon);
+    dropdownMenu.append(hiddenMenu);
     todoInfo.append(todoInfoText);
-    liElement.append(todoInfo);
-    liElement.append(trashIcon);
-    this.todoList.prepend(liElement);
+    todoElement.append(todoInfo);
+    todoElement.append(dropdownMenu);
+    this.todoList.prepend(todoElement);
   }
 
   function deleteTodoElement(todoElement) {
@@ -156,7 +209,7 @@ $(document).ready(function () {
   }
 
   function updateTodoElementIndex() {
-    $("[data-todo-list] li").each(function (index) {
+    $("[data-todo-list]>li").each(function (index) {
       $(this).attr("key", index);
     });
   }
@@ -176,7 +229,7 @@ $(document).ready(function () {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  function getElementWithClasses(element, ...elementClasses) {
+  function getElementWithClasses(element, elementClasses = []) {
     let htmlElement = document.createElement(element);
 
     elementClasses.forEach((elementClass) => {
@@ -197,5 +250,9 @@ $(document).ready(function () {
 
   function removeElementOfTheList(list, index) {
     list.splice(index, 1);
+  }
+
+  function toggleElementVisibility(element) {
+    element.toggleClass("my_d-none");
   }
 });

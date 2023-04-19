@@ -16,13 +16,14 @@ STILE GENERICO */
 body {
   color: var(--primary-color);
   background-color: var(--primary-bg-color);
+  min-width: 304px;
+}
+
+ul {
+  list-style: none;
 }
 
 /* * CLASSI */
-.my_icon {
-  cursor: pointer;
-}
-
 .my_line-through {
   text-decoration: line-through;
 }
@@ -35,6 +36,10 @@ body {
 
 .my_btn {
   vertical-align: initial;
+}
+
+.my_d-none {
+  display: none;
 }
 
 /* *-------------------------------------------------------------------
@@ -57,29 +62,51 @@ main form .my_btn {
   width: 100%;
 }
 
-main ul li {
+main ul.my_todo-list > li {
   background-color: var(--todo-bg-color);
   border-bottom: 3px solid var(--primary-bg-color);
 }
 
-main ul li:last-of-type {
+main ul.my_todo-list > li:last-of-type {
   border-bottom: none;
 }
 
-main ul li:hover {
+main ul.my_todo-list > li:hover {
   background-color: var(--todo-hover-bg-color);
 }
 
-main ul li span {
+main ul.my_todo-list > li .my_todo-info .my_todo-text {
   cursor: pointer;
 }
 
-main ul li:hover span {
+main ul.my_todo-list > li:hover .my_todo-info .my_todo-text {
   font-style: italic;
 }
 
-main ul li span:hover {
+main ul.my_todo-list > li .my_todo-info .my_todo-text:hover {
   font-weight: bold;
+}
+
+main ul.my_todo-list > li .my_dropdown-menu .my_icon {
+  cursor: pointer;
+}
+
+main ul.my_todo-list > li .my_dropdown-menu .my_hidden-menu {
+  background-color: var(--primary-bg-color);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+main ul.my_todo-list > li .my_dropdown-menu .my_hidden-menu.position-absolute {
+  z-index: 2;
+}
+
+main ul.my_todo-list > li .my_dropdown-menu .my_hidden-menu li:hover {
+  background-color: var(--todo-bg-color);
+  cursor: pointer;
+}
+
+main ul.my_todo-list > li .my_dropdown-menu .my_hidden-menu li:active {
+  background-color: var(--todo-hover-bg-color);
 }
 
 /* ?-------------------------------------------------------------------
