@@ -109,8 +109,8 @@ $(document).ready(function () {
       putTodoElementInHtml(inputValue, false, 0);
       refreshTodoInputField();
       updateTodoElementIndex();
+      console.log(todoActions);
     }
-    console.log(todoActions);
   }
 
   function putTodoElementInHtml(todoText, todoStatus, index) {
@@ -150,9 +150,9 @@ $(document).ready(function () {
       todoActions,
       todoActions.length - 1 - todoElement.attr("key")
     );
-    console.log(todoActions);
     todoElement.remove();
     updateTodoElementIndex();
+    console.log(todoActions);
   }
 
   function updateTodoElementIndex() {
@@ -162,9 +162,9 @@ $(document).ready(function () {
   }
 
   function changeTodoStatus(todoElement, index) {
-    console.log(index);
     todoElement.toggleClass("my_line-through");
     todoActions[index].done = !todoActions[index].done;
+    console.log(todoActions);
   }
 
   function refreshTodoInputField() {
