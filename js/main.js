@@ -52,37 +52,131 @@ $(document).ready(function () {
     },
   ];
 
-  // * MAIN CODE
   todoList = $("[data-todo-list]");
   addToListBtn = $("[data-add-to-todo-list]");
   addToListInput = addToListBtn.siblings("input");
 
-  todoActions.forEach((todoAction, index) => {
-    createATodoElement(todoAction.text, index);
-  });
+  // * MAIN CODE
+  init();
+  modifyTodoList();
 
-  addToListBtn.click(function (e) {
-    e.preventDefault();
-    inputValue = addToListInput.val().trim();
-    addElementToTheList(todoActions, inputValue);
-    createATodoElement(inputValue, todoActions.length - 1);
-  });
+  // * FUNCTIONS
+  // ? FUNCTIONS MAINLY LINKED TO THIS PROJECT
+  function init() {
+    console.log(todoActions);
+    todoActions.forEach((todoAction, index) => {
+      putTodoElementInHtml(
+        todoAction.text,
+        todoAction.done,
+        todoActions.length - 1 - index
+      );
+    });
+  }
 
-  addToListInput.keydown(function (e) {
-    if (e.which == 1 || e.which == 13) {
+  function modifyTodoList() {
+    addToListBtn.click(function (e) {
       e.preventDefault();
-      inputValue = addToListInput.val().trim();
-      addElementToTheList(todoActions, inputValue);
-      createATodoElement(inputValue, todoActions.length - 1);
-    }
-  });
+      createTodoElement();
+    });
 
-  // * USEFULL FUNCTIONS
+    addToListInput.keydown(function (e) {
+      if (e.which == 1 || e.which == 13) {
+        createTodoElement();
+      } else if (e.which == 27) {
+        refreshTodoInputField();
+      }
+    });
+
+    $(document).on("click", "[data-remove-from-todo-list]", function () {
+      deleteTodoElement($(this).parents("li"));
+    });
+
+    $(document).on("click", "[data-todo-list] li .my_todo-text", function () {
+      changeTodoStatus(
+        $(this),
+        todoActions.length - 1 - $(this).parents("li").attr("key")
+      );
+    });
+  }
+
+  function createTodoElement() {
+    inputValue = getCapitalizedString(
+      addToListInput.val().trim().toLowerCase()
+    );
+
+    if (inputValue != "" && inputValue.length >= 2) {
+      addElementToTheList(todoActions, inputValue);
+      putTodoElementInHtml(inputValue, false, 0);
+      refreshTodoInputField();
+      updateTodoElementIndex();
+    }
+    console.log(todoActions);
+  }
+
+  function putTodoElementInHtml(todoText, todoStatus, index) {
+    liElement = getElementWithClasses(
+      "li",
+      "d-flex",
+      "justify-content-between",
+      "p-2",
+      "rounded-1"
+    );
+
+    liElement.setAttribute("key", index);
+
+    todoInfo = getElementWithClasses("div", "my_todo-info");
+    todoInfoText = todoStatus
+      ? getElementWithClasses("span", "my_todo-text", "pe-3", "my_line-through")
+      : getElementWithClasses("span", "my_todo-text", "pe-3");
+    todoInfoText.innerHTML = todoText;
+    trashIcon = getElementWithClasses(
+      "i",
+      "my_icon",
+      "fa-solid",
+      "fa-trash",
+      "align-self-center"
+    );
+
+    trashIcon.setAttribute("data-remove-from-todo-list", "");
+
+    todoInfo.append(todoInfoText);
+    liElement.append(todoInfo);
+    liElement.append(trashIcon);
+    this.todoList.prepend(liElement);
+  }
+
+  function deleteTodoElement(todoElement) {
+    removeElementOfTheList(
+      todoActions,
+      todoActions.length - 1 - todoElement.attr("key")
+    );
+    console.log(todoActions);
+    todoElement.remove();
+    updateTodoElementIndex();
+  }
+
+  function updateTodoElementIndex() {
+    $("[data-todo-list] li").each(function (index) {
+      $(this).attr("key", index);
+    });
+  }
+
+  function changeTodoStatus(todoElement, index) {
+    console.log(index);
+    todoElement.toggleClass("my_line-through");
+    todoActions[index].done = !todoActions[index].done;
+  }
+
+  function refreshTodoInputField() {
+    addToListInput.val("");
+  }
+
+  // ? USEFULL FUNCTIONS
   function getCapitalizedString(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  function getAnElementWithClasses(element, ...elementClasses) {
+  function getElementWithClasses(element, ...elementClasses) {
     let htmlElement = document.createElement(element);
 
     elementClasses.forEach((elementClass) => {
@@ -93,43 +187,15 @@ $(document).ready(function () {
   }
 
   function addElementToTheList(list, newElementText) {
-    newElementText = newElementText.toLowerCase();
+    const newElement = {
+      text: newElementText,
+      done: false,
+    };
 
-    if (newElementText != "" && newElementText.length >= 2) {
-      const newElement = {
-        text: newElementText,
-        done: false,
-      };
-
-      list.push(newElement);
-    }
+    list.push(newElement);
   }
 
-  function createATodoElement(todoText, index) {
-    liElement = getAnElementWithClasses(
-      "li",
-      "d-flex",
-      "justify-content-between",
-      "p-2",
-      "rounded-1"
-    );
-
-    liElement.setAttribute("key", index);
-
-    todoInfo = getAnElementWithClasses("div", "my_todo-info");
-    todoInfoText = getAnElementWithClasses("span", "pe-3");
-    todoInfoText.innerHTML = todoText;
-    trashIcon = getAnElementWithClasses(
-      "i",
-      "my_icon",
-      "fa-solid",
-      "fa-trash",
-      "align-self-center"
-    );
-
-    todoInfo.append(todoInfoText);
-    liElement.append(todoInfo);
-    liElement.append(trashIcon);
-    this.todoList.append(liElement);
+  function removeElementOfTheList(list, index) {
+    list.splice(index, 1);
   }
 });
