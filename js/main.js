@@ -105,10 +105,6 @@ $(document).ready(function () {
       toggleElementVisibility($(this).next());
     });
 
-    // $(document).on('click' , "[data-edit-todo-text" , function(){
-
-    // })
-
     $(document).on("click", "[data-remove-from-todo-list]", function () {
       deleteTodoElement($(this).parents("li"));
     });
@@ -146,9 +142,7 @@ $(document).ready(function () {
       "p-2",
       "rounded-1",
     ]);
-
     todoElement.setAttribute("key", index);
-
     todoInfo = getElementWithClasses("div", ["my_todo-info"]);
     todoInfoText = todoStatus
       ? getElementWithClasses("span", [
@@ -183,7 +177,7 @@ $(document).ready(function () {
       dropdownElement = getElementWithClasses("li", ["p-2"]);
       dropdownElement.setAttribute(todoOption["data-attribute"], "");
       dropdownElementIcon = getElementWithClasses("i", todoOption.icon);
-      dropdownElementText = getElementWithClasses("span");
+      dropdownElementText = getElementWithClasses("span", ["ps-2"]);
       dropdownElementText.innerHTML = todoOption.text;
       dropdownElement.append(dropdownElementIcon);
       dropdownElement.append(dropdownElementText);
