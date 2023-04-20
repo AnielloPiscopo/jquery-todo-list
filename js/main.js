@@ -160,7 +160,7 @@ function modifyTodoList() {
   );
 
   $(document).on("keyup", "[data-edit-todo-text]", function (e) {
-    if (e.which == 1 || e.which == 13) {
+    if ((e.which == 1 || e.which == 13) && $(this).val().length >= 2) {
       updateTodoInputField($(this).val(), $(this).siblings(".my_todo-text"));
       toggleElementVisibility($(this));
       toggleElementVisibility($(this).siblings(".my_todo-text"));
@@ -214,7 +214,7 @@ function filterTodoElements(inputValue) {
 }
 
 function createTodoElement() {
-  inputValue = getCapitalizedString(addToListInput.val().trim().toLowerCase());
+  inputValue = getCapitalizedString(addToListInput.val().trim());
 
   if (inputValue != "" && inputValue.length >= 2) {
     addElementToTheList(todoActions, inputValue);
