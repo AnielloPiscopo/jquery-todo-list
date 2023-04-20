@@ -50,12 +50,17 @@
         <div class="container-fluid">
           <div class="row align-items-center py-2">
             <div class="col-4">
-              <h3 class="fw-bold">Todoolean</h3>
+              <div class="my_logo-container">
+                <h3 class="my_logo fw-bold">Todoolean</h3>
+              </div>
             </div>
             <div class="col-4">
               <div class="my_input-container form-group">
                 <div class="input-group d-flex align-items-center">
-                  <div class="my_input-icon input-group-addon px-3">
+                  <div
+                    class="my_input-icon input-group-addon px-3"
+                    data-search-bar
+                  >
                     <i class="my_icon fa-solid fa-magnifying-glass"></i>
                   </div>
                   <input
@@ -76,34 +81,36 @@
       </header>
 
       <!-- * MAIN -->
-      <main class="container-fluid">
-        <!-- ? TITLE -->
-        <h3 class="pt-4 fw-bold">Oggi</h3>
-
-        <!-- ? FORM -->
-        <form class="py-2">
-          <input
-            type="text"
-            name="toDoInput"
-            id="toDoInput"
-            class="my_input form-control d-inline-block mb-3 mb-sm-0 me-sm-3 px-2"
-            placeholder="Inserisci la nuova attività da svolgere"
-          />
-
-          <button
-            type="submit"
-            class="my_btn btn-primary btn"
-            data-add-to-todo-list
-          >
-            Clicca qui!
-          </button>
-        </form>
-
-        <!-- ? CONTENUTO PRINCIPALE DEL TODO -->
-
-        <!-- * Lista toDo -->
+      <main>
         <div class="container-fluid">
-          <ul class="my_todo-list px-0 py-3" data-todo-list></ul>
+          <!-- ? TITLE -->
+          <h3 class="pt-4 fw-bold">Oggi</h3>
+
+          <!-- ? FORM -->
+          <form class="py-2">
+            <input
+              type="text"
+              name="toDoInput"
+              id="toDoInput"
+              class="my_input form-control d-inline-block mb-3 mb-sm-0 me-sm-3 px-2"
+              placeholder="Inserisci la nuova attività da svolgere"
+            />
+
+            <button
+              type="submit"
+              class="my_btn btn-primary btn"
+              data-add-to-todo-list
+            >
+              Clicca qui!
+            </button>
+          </form>
+
+          <!-- ? CONTENUTO PRINCIPALE DEL TODO -->
+
+          <!-- * Lista toDo -->
+          <div class="container-fluid">
+            <ul class="my_todo-list px-0 py-3" data-todo-list></ul>
+          </div>
         </div>
       </main>
     </div>

@@ -11,6 +11,7 @@ STILE GENERICO */
   --todo-bg-color: #f0f0f0;
   --todo-hover-bg-color: #d3d3d3;
   --input-bg-color: #e8e8e8;
+  --highlighted-words-color: rgb(255, 17, 0);
 }
 
 /* * TAG HTML */
@@ -40,7 +41,11 @@ ul {
 }
 
 .my_d-none {
-  display: none;
+  display: none !important;
+}
+
+.my_highlighted-words {
+  color: var(--highlighted-words-color);
 }
 
 /* *-------------------------------------------------------------------
@@ -51,7 +56,8 @@ header {
 }
 
 header .my_icon,
-header .my_input-icon {
+header .my_input-icon,
+header .my_logo {
   cursor: pointer;
 }
 

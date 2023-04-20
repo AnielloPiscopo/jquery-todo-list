@@ -66,12 +66,15 @@ const todoOptions = [
 ];
 
 var todoList = $("[data-todo-list]");
+var filterTodoListBtn = $("[data-search-bar");
+var filterTodoListInput = filterTodoListBtn.siblings("input");
 var addToListBtn = $("[data-add-to-todo-list]");
 var addToListInput = addToListBtn.siblings("input");
 
 // * MAIN CODE
 $(document).ready(function () {
   init();
+  useSearchBar();
   modifyTodoList();
 });
 
@@ -88,13 +91,37 @@ function init() {
   });
 }
 
+function useSearchBar() {
+  filterTodoListBtn.click(function (e) {
+    e.preventDefault();
+    if (filterTodoListInput.val() !== "") {
+      filterTodoElements(filterTodoListInput.val().toLowerCase());
+    } else {
+      $("[data-todo-list] li").each(function () {
+        addElementVisibility($(this));
+      });
+    }
+  });
+
+  filterTodoListInput.keyup(function (e) {
+    if (e.which == 27) {
+      refreshSearchBar();
+      $("[data-todo-list]>li").each(function () {
+        addElementVisibility($(this));
+      });
+    } else {
+      filterTodoElements($(this).val().toLowerCase());
+    }
+  });
+}
+
 function modifyTodoList() {
   addToListBtn.click(function (e) {
     e.preventDefault();
     createTodoElement();
   });
 
-  addToListInput.keydown(function (e) {
+  addToListInput.keyup(function (e) {
     if (e.which == 1 || e.which == 13) {
       createTodoElement();
     } else if (e.which == 27) {
@@ -132,7 +159,7 @@ function modifyTodoList() {
     }
   );
 
-  $(document).on("keydown", "[data-edit-todo-text]", function (e) {
+  $(document).on("keyup", "[data-edit-todo-text]", function (e) {
     if (e.which == 1 || e.which == 13) {
       updateTodoInputField($(this).val(), $(this).siblings(".my_todo-text"));
       toggleElementVisibility($(this));
@@ -160,6 +187,29 @@ function modifyTodoList() {
       $(this).children().children("input").val(),
       $(this).children().children(".my_todo-text")
     );
+  });
+}
+
+function filterTodoElements(inputValue) {
+  $("[data-todo-list]>li").each(function () {
+    const todoText = $(this).find(".my_todo-info .my_todo-text");
+    const todoTextValue = todoText.text();
+
+    const position = todoTextValue.toLowerCase().indexOf(inputValue);
+
+    if (position !== -1) {
+      addElementVisibility($(this));
+      const before = todoTextValue.slice(0, position);
+      const after = todoTextValue.slice(position + inputValue.length);
+      const highlightedText = todoTextValue.slice(
+        position,
+        position + inputValue.length
+      );
+      const newText = `${before}<span class='my_highlighted-words'>${highlightedText}</span>${after}`;
+      todoText.html(newText);
+    } else {
+      removeElementVisibility($(this));
+    }
   });
 }
 
@@ -266,6 +316,10 @@ function changeTodoStatus(todoElement, index) {
   todoElement.toggleClass("my_line-through");
   todoActions[index].done = !todoActions[index].done;
   console.log(todoActions);
+}
+
+function refreshSearchBar() {
+  filterTodoListInput.val("");
 }
 
 function refreshTodoListInputField() {
