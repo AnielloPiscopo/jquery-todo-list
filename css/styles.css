@@ -5,6 +5,7 @@ STILE GENERICO */
 :root {
   --primary-color: black;
   --primary-bg-color: white;
+  --header-bg-color: #0d6efd;
   --wrong-input-value: red;
   --valid-input-value: green;
   --todo-bg-color: #f0f0f0;
@@ -44,6 +45,23 @@ ul {
 
 /* *-------------------------------------------------------------------
 STILE SPECIFICO */
+
+header {
+  background-color: var(--header-bg-color);
+}
+
+header .my_icon,
+header .my_input-icon {
+  cursor: pointer;
+}
+
+header .my_input-container {
+  background-color: var(--primary-bg-color);
+}
+
+header .my_input {
+  width: 100%;
+}
 
 main form .my_input {
   width: 100%;

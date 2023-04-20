@@ -65,9 +65,9 @@ const todoOptions = [
   },
 ];
 
-todoList = $("[data-todo-list]");
-addToListBtn = $("[data-add-to-todo-list]");
-addToListInput = addToListBtn.siblings("input");
+var todoList = $("[data-todo-list]");
+var addToListBtn = $("[data-add-to-todo-list]");
+var addToListInput = addToListBtn.siblings("input");
 
 // * MAIN CODE
 $(document).ready(function () {
@@ -89,18 +89,6 @@ function init() {
 }
 
 function modifyTodoList() {
-  $(document).on("dblclick", "[data-todo-list]>li", function () {
-    console.log(
-      $(this).children().children("[data-change-dropdown-menu-status]")
-    );
-    removeElementVisibility($(this).children().children("input"));
-    addElementVisibility($(this).children().children(".my_todo-text"));
-    removeElementVisibility($(this).children().children(".my_hidden-menu"));
-    updateTodoInputField(
-      $(this).children().children("input").val(),
-      $(this).children().children(".my_todo-text")
-    );
-  });
   addToListBtn.click(function (e) {
     e.preventDefault();
     createTodoElement();
@@ -125,7 +113,7 @@ function modifyTodoList() {
     toggleElementVisibility(
       $(this).parents(".my_dropdown-menu").prev().children("input")
     );
-    toggleElementVisibility($(this).parents(".my_hidden-menu"));
+    removeElementVisibility($(this).parents(".my_hidden-menu"));
   });
 
   $(document).on("click", "[data-remove-from-todo-list]", function () {
@@ -149,10 +137,29 @@ function modifyTodoList() {
       updateTodoInputField($(this).val(), $(this).siblings(".my_todo-text"));
       toggleElementVisibility($(this));
       toggleElementVisibility($(this).siblings(".my_todo-text"));
+      removeElementVisibility(
+        $(this).parents("li").children().children(".my_hidden-menu")
+      );
     } else if (e.which == 27) {
       toggleElementVisibility($(this));
       toggleElementVisibility($(this).siblings(".my_todo-text"));
+      removeElementVisibility(
+        $(this).parents("li").children().children(".my_hidden-menu")
+      );
     }
+  });
+
+  $(document).on("dblclick", "[data-todo-list]>li", function () {
+    console.log(
+      $(this).children().children("[data-change-dropdown-menu-status]")
+    );
+    removeElementVisibility($(this).children().children("input"));
+    addElementVisibility($(this).children().children(".my_todo-text"));
+    removeElementVisibility($(this).children().children(".my_hidden-menu"));
+    updateTodoInputField(
+      $(this).children().children("input").val(),
+      $(this).children().children(".my_todo-text")
+    );
   });
 }
 
@@ -182,7 +189,10 @@ function putTodoElementInHtml(todoText, todoStatus, index) {
     : getElementWithClasses("span", ["my_todo-text", "pe-3"]);
   todoInfoText.innerHTML = todoText;
 
-  const todoInputField = getElementWithClasses("input", ["my_d-none"]);
+  const todoInputField = getElementWithClasses("input", [
+    "my_input",
+    "my_d-none",
+  ]);
   todoInputField.setAttribute("type", "text");
   todoInputField.setAttribute("data-edit-todo-text", "");
   todoInputField.value = todoText;
@@ -233,6 +243,7 @@ function updateTodoInputField(todoInputValue, todoTextElement) {
   todoActions[
     todoActions.length - 1 - todoTextElement.parents("li").attr("key")
   ].text = todoInputValue;
+  console.log(todoActions);
 }
 
 function deleteTodoElement(todoElement) {
