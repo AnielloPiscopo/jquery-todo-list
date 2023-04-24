@@ -66,8 +66,7 @@ const todoOptions = [
 ];
 
 var todoList = $("[data-todo-list]");
-var filterTodoListBtn = $("[data-search-bar");
-var filterTodoListInput = filterTodoListBtn.siblings("input");
+var filterTodoListInput = $("[data-search-bar");
 var addToListBtn = $("[data-add-to-todo-list]");
 var addToListInput = addToListBtn.siblings("input");
 
@@ -79,7 +78,12 @@ $(document).ready(function () {
 });
 
 // * FUNCTIONS
+
 // ? FUNCTIONS MAINLY LINKED TO THIS PROJECT
+
+/**
+ *  Function that permit to show in the page the default elements of the todo list that are located in the array "todoOptions".
+ */
 function init() {
   console.log(todoActions);
   todoActions.forEach((todoAction, index) => {
@@ -91,18 +95,10 @@ function init() {
   });
 }
 
+/**
+ * Function that permit the guest to use the searchbar of the page.
+ */
 function useSearchBar() {
-  filterTodoListBtn.click(function (e) {
-    e.preventDefault();
-    if (filterTodoListInput.val() !== "") {
-      filterTodoElements(filterTodoListInput.val().toLowerCase());
-    } else {
-      $("[data-todo-list] li").each(function () {
-        addElementVisibility($(this));
-      });
-    }
-  });
-
   filterTodoListInput.keyup(function (e) {
     if (e.which == 27) {
       refreshSearchBar();
@@ -110,11 +106,14 @@ function useSearchBar() {
         addElementVisibility($(this));
       });
     } else {
-      filterTodoElements($(this).val().toLowerCase());
+      filterTodoElements($(this).val().trim().toLowerCase());
     }
   });
 }
 
+/**
+ * Function that permit the guest to modify the todolist
+ */
 function modifyTodoList() {
   addToListBtn.click(function (e) {
     e.preventDefault();
@@ -190,6 +189,10 @@ function modifyTodoList() {
   });
 }
 
+/**
+ * Function that permit the guest to filter the elements in the todoList available in the page.
+ * @param {string} inputValue
+ */
 function filterTodoElements(inputValue) {
   $("[data-todo-list]>li").each(function () {
     const todoText = $(this).find(".my_todo-info .my_todo-text");
@@ -213,6 +216,9 @@ function filterTodoElements(inputValue) {
   });
 }
 
+/**
+ * Function that permit the guest to create a new todo element.
+ */
 function createTodoElement() {
   inputValue = getCapitalizedString(addToListInput.val().trim());
 
@@ -225,6 +231,12 @@ function createTodoElement() {
   }
 }
 
+/**
+ * Function that permit to put the created todoElement in the page available to the user.
+ * @param {string} todoText
+ * @param {boolean} todoStatus
+ * @param {number} index
+ */
 function putTodoElementInHtml(todoText, todoStatus, index) {
   const todoElement = getElementWithClasses("li", [
     "d-flex",
@@ -288,6 +300,11 @@ function putTodoElementInHtml(todoText, todoStatus, index) {
   this.todoList.prepend(todoElement);
 }
 
+/**
+ * Function that permit to update the text input field associated to the single todo element.
+ * @param {string} todoInputValue
+ * @param {object} todoTextElement
+ */
 function updateTodoInputField(todoInputValue, todoTextElement) {
   todoTextElement.text(todoInputValue);
   todoActions[
@@ -296,6 +313,10 @@ function updateTodoInputField(todoInputValue, todoTextElement) {
   console.log(todoActions);
 }
 
+/**
+ * Function that permit the guest to delete an element from the todo list.
+ * @param {object} todoElement
+ */
 function deleteTodoElement(todoElement) {
   removeElementOfTheList(
     todoActions,
@@ -306,35 +327,64 @@ function deleteTodoElement(todoElement) {
   console.log(todoActions);
 }
 
+/**
+ * Function that permit to change the attribute "key" of a single todo element.
+ */
 function updateTodoElementIndex() {
   $("[data-todo-list]>li").each(function (index) {
     $(this).attr("key", index);
   });
 }
 
+/**
+ * Function that permit the guest to change the status of the todo element.
+ * @param {object} todoElement
+ * @param {number} index
+ */
 function changeTodoStatus(todoElement, index) {
   todoElement.toggleClass("my_line-through");
   todoActions[index].done = !todoActions[index].done;
   console.log(todoActions);
 }
 
+/**
+ * Function that permit the reset of the value in the search bar.
+ */
 function refreshSearchBar() {
   filterTodoListInput.val("");
 }
 
+/**
+ * Function that permit the reset of the value of the text input field of the todo list.
+ */
 function refreshTodoListInputField() {
   addToListInput.val("");
 }
 
+/**
+ * Function that permit the reset of the value of the text input field of the single todo element.
+ */
 function refreshTodoElementInputField() {
   $("[data-edit-todo-text]").val("");
 }
 
 // ? USEFULL FUNCTIONS
+
+/**
+ * Function that return a capitazed string.
+ * @param {string} str
+ * @returns {string}
+ */
 function getCapitalizedString(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/**
+ * Function that return a HTML element with optional classes.
+ * @param {string} element
+ * @param {array} elementClasses
+ * @returns {DOM}
+ */
 function getElementWithClasses(element, elementClasses = []) {
   let htmlElement = document.createElement(element);
 
@@ -345,6 +395,11 @@ function getElementWithClasses(element, elementClasses = []) {
   return htmlElement;
 }
 
+/**
+ * Function that permit to push something in a list.
+ * @param {array} list
+ * @param {string} newElementText
+ */
 function addElementToTheList(list, newElementText) {
   const newElement = {
     text: newElementText,
@@ -354,18 +409,41 @@ function addElementToTheList(list, newElementText) {
   list.push(newElement);
 }
 
+/**
+ * Function that permit to remove something in a list.
+ * @param {array} list
+ * @param {number} index
+ */
 function removeElementOfTheList(list, index) {
   list.splice(index, 1);
 }
 
+/**
+ * Function that permit to change the visibility of a element given with Jquery
+ * by changing the status of the presence of a default css class
+ * that permit to add the 'display:none' property.
+ * @param {object} element
+ */
 function toggleElementVisibility(element) {
   element.toggleClass("my_d-none");
 }
 
+/**
+ * Function that permit to remove the visibility of a element given with Jquery
+ * by adding the status of the presence of a default css class
+ * that permit to add the 'display:none' property.
+ * @param {object} element
+ */
 function removeElementVisibility(element) {
   element.addClass("my_d-none");
 }
 
+/**
+ * Function that permit to add the visibility of a element given with Jquery
+ * by removing the status of the presence of a default css class
+ * that permit to add the 'display:none' property.
+ * @param {object} element
+ */
 function addElementVisibility(element) {
   element.removeClass("my_d-none");
 }
